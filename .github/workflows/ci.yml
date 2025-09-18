@@ -44,6 +44,13 @@ jobs:
     - name: 🎭 Install Playwright Browsers
       run: cd playwright && npx playwright install --with-deps
       
+    - name: 📁 Create Allure Results Directories
+      run: |
+        mkdir -p allure-results
+        mkdir -p cypress/allure-results
+        mkdir -p playwright/allure-results
+        mkdir -p selenium/allure-results
+      
     - name: 🎭 Run Playwright Tests (with retry)
       uses: nick-fields/retry@v3
       with:

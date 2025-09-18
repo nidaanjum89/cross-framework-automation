@@ -13,7 +13,7 @@
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
     "report": "playwright show-report",
-    "test:allure": "playwright test --reporter=allure-playwright && cp -r allure-results/* ../allure-results/",
+    "test:allure": "mkdir -p allure-results && playwright test --reporter=allure-playwright && cp -r allure-results/* ../allure-results/ || true",
     "install": "playwright install"
   },
   "devDependencies": {

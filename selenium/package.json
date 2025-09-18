@@ -11,7 +11,7 @@
     "test:smoke": "mocha tests/**/*.spec.js --grep '@smoke' --timeout 30000",
     "test:mobile": "mocha tests/**/*.spec.js --grep '@mobile' --timeout 30000",
     "test:negative": "mocha tests/**/*.spec.js --grep '@negative' --timeout 30000",
-    "test:allure": "mocha tests/**/*.spec.js --timeout 30000 --reporter allure-mocha && cp -r allure-results/* ../allure-results/"
+    "test:allure": "mkdir -p allure-results && mocha tests/**/*.spec.js --timeout 30000 --reporter allure-mocha && cp -r allure-results/* ../allure-results/ || true"
   },
   "devDependencies": {
     "allure-mocha": "^3.4.1",

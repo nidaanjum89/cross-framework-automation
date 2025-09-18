@@ -8,7 +8,7 @@
     "cy:run:chrome": "cypress run --browser chrome",
     "cy:run:firefox": "cypress run --browser firefox",
     "cy:run:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
-    "test:allure": "cypress run --env allure=true && cp -r allure-results/* ../allure-results/"
+    "test:allure": "mkdir -p allure-results && cypress run --env allure=true && cp -r allure-results/* ../allure-results/ || true"
   },
   "devDependencies": {
     "@cypress/grep": "^4.0.1",

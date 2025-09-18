@@ -1,0 +1,5 @@
+{
+  "timeout": 30000,
+  "reporter": "allure-mocha",
+  "require": ["./config/allure-setup.js"]
+}
