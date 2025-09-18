@@ -48,17 +48,29 @@ jobs:
     - name: 🎭 Install Playwright Browsers
       run: cd playwright && npx playwright install --with-deps
       
-    - name: 🧪 Run Playwright Tests
-      run: npm run playwright:allure
-      continue-on-error: true
-      
-    - name: 🔧 Run Selenium Tests  
-      run: npm run selenium:allure
-      continue-on-error: true
-      
-    - name: 🌲 Run Cypress Tests
-      run: npm run cypress:allure
-      continue-on-error: true
+    - name: 🎭 Run Playwright Tests (with retry)
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 15
+        max_attempts: 3
+        retry_on: error
+        command: npm run playwright:allure
+        
+    - name: 🔧 Run Selenium Tests (with retry)
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 15
+        max_attempts: 3
+        retry_on: error
+        command: npm run selenium:allure
+        
+    - name: 🌲 Run Cypress Tests (with retry)
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 15
+        max_attempts: 3
+        retry_on: error
+        command: npm run cypress:allure
       
     - name: 📊 Generate Unified Allure Report
       run: npm run allure:generate
