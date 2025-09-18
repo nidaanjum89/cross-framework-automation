@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Login Issues",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": ".*login.*|.*authentication.*"
+  },
+  {
+    "name": "Product Issues",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": ".*product.*|.*inventory.*"
+  },
+  {
+    "name": "Cart Issues",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": ".*cart.*|.*shopping.*"
+  },
+  {
+    "name": "Checkout Issues",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": ".*checkout.*|.*payment.*"
+  },
+  {
+    "name": "Mobile Issues",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "messageRegex": ".*mobile.*|.*viewport.*"
+  },
+  {
+    "name": "Flaky Tests",
+    "matchedStatuses": [
+      "failed",
+      "broken"
+    ],
+    "messageRegex": ".*timeout.*|.*network.*"
+  }
+]

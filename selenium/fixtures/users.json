@@ -1,0 +1,65 @@
+{
+  "validUsers": {
+    "standard_user": {
+      "username": "standard_user",
+      "password": "secret_sauce"
+    },
+    "performance_glitch_user": {
+      "username": "performance_glitch_user",
+      "password": "secret_sauce"
+    },
+    "problem_user": {
+      "username": "problem_user",
+      "password": "secret_sauce"
+    }
+  },
+  "invalidUsers": {
+    "locked_out_user": {
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Sorry, this user has been locked out."
+    },
+    "invalid_credentials": {
+      "username": "invalid_user",
+      "password": "wrong_password",
+      "expectedError": "Epic sadface: Username and password do not match any user in this service"
+    },
+    "empty_username": {
+      "username": "",
+      "password": "secret_sauce",
+      "expectedError": "Epic sadface: Username is required"
+    },
+    "empty_password": {
+      "username": "standard_user",
+      "password": "",
+      "expectedError": "Epic sadface: Password is required"
+    }
+  },
+  "checkoutInfo": {
+    "valid": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "postalCode": "12345"
+    },
+    "invalid": {
+      "missingFirstName": {
+        "firstName": "",
+        "lastName": "Doe",
+        "postalCode": "12345",
+        "expectedError": "Error: First Name is required"
+      },
+      "missingLastName": {
+        "firstName": "John",
+        "lastName": "",
+        "postalCode": "12345",
+        "expectedError": "Error: Last Name is required"
+      },
+      "missingPostalCode": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "postalCode": "",
+        "expectedError": "Error: Postal Code is required"
+      }
+    }
+  }
+}

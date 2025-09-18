@@ -1,0 +1,18 @@
+{
+  "name": "cypress-tests",
+  "version": "1.0.0",
+  "description": "Cypress tests for Sauce Demo application",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:firefox": "cypress run --browser firefox",
+    "cy:run:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
+    "test:allure": "cypress run --env allure=true && cp -r allure-results/* ../allure-results/"
+  },
+  "devDependencies": {
+    "@cypress/grep": "^4.0.1",
+    "@shelex/cypress-allure-plugin": "^2.41.2",
+    "cypress": "^13.6.0"
+  }
+}

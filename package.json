@@ -1,0 +1,40 @@
+{
+  "name": "cross-framework-automation",
+  "version": "1.0.0",
+  "description": "Cross-framework automation testing project showcasing Cypress, Playwright, and Selenium",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cd cypress && npm run cy:open",
+    "cypress:run": "cd cypress && npm run cy:run",
+    "playwright:test": "cd playwright && npm run test",
+    "playwright:ui": "cd playwright && npm run test:ui",
+    "selenium:test": "cd selenium && npm test",
+    "test:all": "npm run cypress:run && npm run playwright:test && npm run selenium:test",
+    "test:all:allure": "npm run clean:allure && npm run cypress:allure && npm run playwright:allure && npm run selenium:allure && npm run allure:generate",
+    "cypress:allure": "cd cypress && npm run test:allure",
+    "playwright:allure": "cd playwright && npm run test:allure",
+    "selenium:allure": "cd selenium && npm run test:allure",
+    "clean:allure": "rm -rf allure-results/* allure-report/*",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:serve": "allure serve allure-results",
+    "allure:open": "allure open allure-report",
+    "report:generate": "node generate-report.js",
+    "install:all": "npm run install:cypress && npm run install:playwright && npm run install:selenium",
+    "install:cypress": "cd cypress && npm install",
+    "install:playwright": "cd playwright && npm install",
+    "install:selenium": "cd selenium && npm install"
+  },
+  "keywords": [
+    "cypress",
+    "playwright",
+    "selenium",
+    "automation",
+    "testing",
+    "cross-framework"
+  ],
+  "author": "Cross-Framework Automation Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

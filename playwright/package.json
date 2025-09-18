@@ -1,0 +1,25 @@
+{
+  "name": "playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright tests for Sauce Demo application",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:mobile": "playwright test --project=mobile",
+    "test:desktop": "playwright test --project=desktop",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "report": "playwright show-report",
+    "test:allure": "playwright test --reporter=allure-playwright && cp -r allure-results/* ../allure-results/",
+    "install": "playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.8.0",
+    "allure-playwright": "^3.4.1",
+    "typescript": "^5.2.0"
+  }
+}

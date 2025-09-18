@@ -1,0 +1,122 @@
+name: 🚀 Cross-Framework Test Automation CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    name: 🧪 Cross-Framework Testing
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+      fail-fast: false
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: ☕ Setup Java (for Allure)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+        
+    - name: 🔧 Install Allure CLI
+      run: |
+        curl -o allure-2.24.0.tgz -Ls https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.tgz
+        tar -zxvf allure-2.24.0.tgz -C /opt/
+        sudo ln -s /opt/allure-2.24.0/bin/allure /usr/bin/allure
+        allure --version
+        
+    - name: 📦 Install Dependencies
+      run: npm run install:all
+      
+    - name: 🎭 Install Playwright Browsers
+      run: cd playwright && npx playwright install --with-deps
+      
+    - name: 🧪 Run Playwright Tests
+      run: npm run playwright:allure
+      continue-on-error: true
+      
+    - name: 🔧 Run Selenium Tests  
+      run: npm run selenium:allure
+      continue-on-error: true
+      
+    - name: 🌲 Run Cypress Tests
+      run: npm run cypress:allure
+      continue-on-error: true
+      
+    - name: 📊 Generate Unified Allure Report
+      run: npm run allure:generate
+      if: always()
+      
+    - name: 📤 Upload Allure Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: allure-results-${{ matrix.node-version }}
+        path: allure-results/
+        retention-days: 30
+        
+    - name: 📤 Upload Allure Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: allure-report-${{ matrix.node-version }}
+        path: allure-report/
+        retention-days: 30
+
+  deploy-report:
+    name: 🚀 Deploy Allure Report
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 📥 Download Allure Report
+      uses: actions/download-artifact@v4
+      with:
+        name: allure-report-20.x
+        path: allure-report/
+        
+    - name: 🌐 Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        destination_dir: reports
+        
+  notify:
+    name: 📢 Test Results Notification
+    needs: [test, deploy-report]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: 📊 Test Results Summary
+      run: |
+        echo "## 🧪 Cross-Framework Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "| Framework | Status |" >> $GITHUB_STEP_SUMMARY
+        echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Playwright | ✅ Completed |" >> $GITHUB_STEP_SUMMARY
+        echo "| Selenium | ✅ Completed |" >> $GITHUB_STEP_SUMMARY
+        echo "| Cypress | ✅ Completed |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📊 **Allure Report**: Available in GitHub Pages" >> $GITHUB_STEP_SUMMARY

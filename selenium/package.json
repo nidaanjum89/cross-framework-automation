@@ -1,0 +1,25 @@
+{
+  "name": "selenium-tests",
+  "version": "1.0.0",
+  "description": "Selenium tests for Sauce Demo application",
+  "scripts": {
+    "test": "mocha tests/**/*.spec.js --timeout 30000",
+    "test:chrome": "BROWSER=chrome npm test",
+    "test:firefox": "BROWSER=firefox npm test",
+    "test:edge": "BROWSER=edge npm test",
+    "test:headless": "HEADLESS=true npm test",
+    "test:smoke": "mocha tests/**/*.spec.js --grep '@smoke' --timeout 30000",
+    "test:mobile": "mocha tests/**/*.spec.js --grep '@mobile' --timeout 30000",
+    "test:negative": "mocha tests/**/*.spec.js --grep '@negative' --timeout 30000",
+    "test:allure": "mocha tests/**/*.spec.js --timeout 30000 --reporter allure-mocha && cp -r allure-results/* ../allure-results/"
+  },
+  "devDependencies": {
+    "allure-mocha": "^3.4.1",
+    "chai": "^4.3.10",
+    "chromedriver": "^140.0.3",
+    "edgedriver": "^5.4.0",
+    "geckodriver": "^4.2.1",
+    "mocha": "^10.2.0",
+    "selenium-webdriver": "^4.15.0"
+  }
+}
