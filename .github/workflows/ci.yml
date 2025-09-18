@@ -21,7 +21,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
       fail-fast: false
     
     steps:
@@ -59,24 +59,24 @@ jobs:
     - name: 🎭 Run Playwright Tests (with retry)
       uses: nick-fields/retry@v3
       with:
-        timeout_minutes: 15
-        max_attempts: 3
+        timeout_minutes: 10
+        max_attempts: 2
         retry_on: error
         command: npm run playwright:allure
         
     - name: 🔧 Run Selenium Tests (with retry)
       uses: nick-fields/retry@v3
       with:
-        timeout_minutes: 15
-        max_attempts: 3
+        timeout_minutes: 10
+        max_attempts: 2
         retry_on: error
         command: npm run selenium:allure
         
     - name: 🌲 Run Cypress Tests (with retry)
       uses: nick-fields/retry@v3
       with:
-        timeout_minutes: 15
-        max_attempts: 3
+        timeout_minutes: 10
+        max_attempts: 2
         retry_on: error
         command: npm run cypress:allure
       
@@ -88,7 +88,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: allure-results-${{ matrix.node-version }}
+        name: allure-results-20.x
         path: allure-results/
         retention-days: 30
         
@@ -96,7 +96,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: allure-report-${{ matrix.node-version }}
+        name: allure-report-20.x
         path: allure-report/
         retention-days: 30
 

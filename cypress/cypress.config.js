@@ -5,11 +5,12 @@ module.exports = defineConfig({
     baseUrl: 'https://www.saucedemo.com',
     viewportWidth: 1280,
     viewportHeight: 720,
-    video: true,
+    video: false, // Disable video recording for faster CI
     screenshotOnRunFailure: true,
-    defaultCommandTimeout: 10000,
-    requestTimeout: 10000,
-    responseTimeout: 10000,
+    defaultCommandTimeout: 8000, // Reduced timeout for faster execution
+    requestTimeout: 8000,
+    responseTimeout: 8000,
+    numTestsKeptInMemory: 0, // Reduce memory usage
     setupNodeEvents(on, config) {
       // implement node event listeners here
       require('@cypress/grep/src/plugin')(config)
