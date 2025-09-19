@@ -1,0 +1,68 @@
+name: Daily Test Report
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Run daily at 2 AM UTC
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  daily-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        npm install
+        npm run install:all
+    
+    
+    - name: Run Cypress tests and capture results
+      id: cypress
+      run: |
+        if npm run test:cypress; then
+          echo "CYPRESS_RESULT= All tests passed" >> $GITHUB_ENV
+        else
+          echo "CYPRESS_RESULT= Some tests failed" >> $GITHUB_ENV
+        fi
+      continue-on-error: true
+
+    - name: Run Playwright tests and capture results
+      id: playwright
+      run: |
+        if npm run test:playwright; then
+          echo "PLAYWRIGHT_RESULT= All tests passed" >> $GITHUB_ENV
+        else
+          echo "PLAYWRIGHT_RESULT= Some tests failed" >> $GITHUB_ENV
+        fi
+      continue-on-error: true
+
+    - name: Run Selenium tests and capture results
+      id: selenium
+      run: |
+        if npm run test:selenium; then
+          echo "SELENIUM_RESULT= All tests passed" >> $GITHUB_ENV
+        else
+          echo "SELENIUM_RESULT= Some tests failed" >> $GITHUB_ENV
+        fi
+      continue-on-error: true
+
+    - name: Generate unified report
+      run: npm run report:generate
+      continue-on-error: true
+
+    - name: Send Slack notification
+      run: |
+        node .github/workflows/daily-slack-report.js
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        CYPRESS_RESULT: ${{ env.CYPRESS_RESULT }}
+        PLAYWRIGHT_RESULT: ${{ env.PLAYWRIGHT_RESULT }}
+        SELENIUM_RESULT: ${{ env.SELENIUM_RESULT }}
