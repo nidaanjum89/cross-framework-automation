@@ -133,19 +133,43 @@ jobs:
       uses: actions/deploy-pages@v4
         
   notify:
-    name: 📢 Test Results Notification
+    name: 📢 Pipeline Status Notification
     needs: [test, deploy-report]
     runs-on: ubuntu-latest
     if: always()
     
     steps:
-    - name: 📊 Test Results Summary
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: 📊 Determine Test Results
+      id: test-results
       run: |
-        echo "## 🧪 Cross-Framework Test Results" >> $GITHUB_STEP_SUMMARY
-        echo "| Framework | Status |" >> $GITHUB_STEP_SUMMARY
-        echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Playwright | ✅ Completed |" >> $GITHUB_STEP_SUMMARY
-        echo "| Selenium | ✅ Completed |" >> $GITHUB_STEP_SUMMARY
-        echo "| Cypress | ✅ Completed |" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "📊 **Allure Report**: Available in GitHub Pages" >> $GITHUB_STEP_SUMMARY
+        # Get test job status
+        TEST_STATUS="${{ needs.test.result }}"
+        
+        # Create test results JSON
+        echo "{
+          \"Playwright\": $([ "$TEST_STATUS" == "success" ] && echo true || echo false),
+          \"Selenium\": $([ "$TEST_STATUS" == "success" ] && echo true || echo false),
+          \"Cypress\": $([ "$TEST_STATUS" == "success" ] && echo true || echo false)
+        }" > test_results.json
+        
+        # Set status output
+        if [ "$TEST_STATUS" == "success" ]; then
+          echo "status=success" >> $GITHUB_OUTPUT
+        elif [ "$TEST_STATUS" == "cancelled" ]; then
+          echo "status=cancelled" >> $GITHUB_OUTPUT
+        else
+          echo "status=failure" >> $GITHUB_OUTPUT
+        fi
+
+    - name: 📢 Send Slack Notification
+      run: node .github/workflows/slack-notify-ci.js "${{ steps.test-results.outputs.status }}" "$(cat test_results.json)"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
